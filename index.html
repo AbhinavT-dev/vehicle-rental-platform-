@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Rental System - Student Project</title>
+  <style>
+    /* Minimal & Clean CSS */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f4f6f9; color: #333; line-height: 1.5; padding-bottom: 30px; }
+    .container { width: 90%; max-width: 900px; margin: 0 auto; }
+    
+    /* Nav */
+    nav { background: #fff; border-bottom: 2px solid #ddd; padding: 12px 0; position: sticky; top: 0; }
+    .nav-flex { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 20px; font-weight: bold; color: #0066cc; text-decoration: none; }
+    .nav-links a { text-decoration: none; color: #333; margin-left: 15px; font-weight: bold; font-size: 14px; }
+    .nav-links a:hover { color: #0066cc; }
+
+    /* Hero */
+    .hero { background: #0066cc; color: #fff; text-align: center; padding: 35px 20px; border-radius: 8px; margin: 20px 0; }
+    .hero h1 { font-size: 26px; margin-bottom: 8px; }
+    .hero p { font-size: 15px; opacity: 0.9; }
+
+    /* Section Headers & Filter Tabs */
+    h2 { text-align: center; margin: 25px 0 15px 0; font-size: 22px; }
+    .filters { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filters button { padding: 6px 14px; border: 1px solid #ccc; background: #fff; border-radius: 15px; cursor: pointer; font-weight: bold; }
+    .filters button.active, .filters button:hover { background: #0066cc; color: #fff; border-color: #0066cc; }
+
+    /* Vehicle Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 30px; }
+    .card { background: #fff; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 140px; object-fit: cover; }
+    .card-body { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
+    .tag { font-size: 11px; background: #e6f0fa; color: #0066cc; padding: 2px 6px; border-radius: 3px; font-weight: bold; width: fit-content; }
+    .card-title { font-size: 16px; margin: 6px 0 4px 0; }
+    .card-meta { font-size: 12px; color: #666; margin-bottom: 10px; }
+    .card-price { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 8px; }
+    .price { font-size: 16px; font-weight: bold; color: #0066cc; }
+
+    /* Buttons */
+    .btn { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; text-decoration: none; }
+    .btn-blue { background: #0066cc; color: #fff; }
+    .btn-green { background: #28a745; color: #fff; }
+    .btn-red { background: #dc3545; color: #fff; }
+
+    /* Form & Bill Box */
+    .box { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 20px; max-width: 550px; margin: 0 auto 30px auto; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    .bill { background: #f8fafc; border: 1px dashed #0066cc; border-radius: 4px; padding: 12px; margin: 12px 0; font-size: 13px; }
+    .bill-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .bill-total { border-top: 1px solid #ddd; padding-top: 6px; font-size: 15px; font-weight: bold; color: #0066cc; }
+
+    /* Receipt */
+    .receipt { display: none; background: #fff; border: 2px solid #28a745; border-radius: 6px; padding: 15px; margin-top: 15px; font-size: 13px; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #ddd; margin-bottom: 20px; font-size: 13px; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #ddd; text-align: left; }
+    th { background: #eee; }
+
+    /* Footer */
+    footer { text-align: center; font-size: 13px; color: #666; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Header -->
+  <nav>
+    <div class="container nav-flex">
+      <a href="#" class="logo">Drive<span>Easy</span> 🚗</a>
+      <div class="nav-links">
+        <a href="#vehicles">Vehicles</a>
+        <a href="#booking">Book</a>
+        <a href="#admin">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- 2. Hero -->
+    <div class="hero">
+      <h1>Simple Vehicle Rental System</h1>
+      <p>Rent cars, bikes, and scooters at affordable daily rates.</p>
+    </div>
+
+    <!-- 3. Vehicles Section -->
+    <section id="vehicles">
+      <h2>Select a Vehicle</h2>
+
+      <!-- Category Filter -->
+      <div class="filters">
+        <button class="active" onclick="filterCars('all', this)">All</button>
+        <button onclick="filterCars('car', this)">Cars</button>
+        <button onclick="filterCars('suv', this)">SUVs</button>
+        <button onclick="filterCars('bike', this)">Bikes</button>
+        <button onclick="filterCars('scooter', this)">Scooters</button>
+      </div>
+
+      <!-- Vehicle Grid -->
+      <div class="grid">
+        <!-- 1. Swift -->
+        <div class="card" data-cat="car">
+          <img src="https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400" alt="Swift">
+          <div class="card-body">
+            <span class="tag">Car • Manual</span>
+            <div class="card-title">Maruti Swift</div>
+            <div class="card-meta">5 Seats • Petrol • 22 km/L</div>
+            <div class="card-price">
+              <span class="price">₹1,500/day</span>
+              <button class="btn btn-blue" onclick="pickCar('swift')">Book</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Creta -->
+        <div class="card" data-cat="suv">
+          <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400" alt="Creta">
+          <div class="card-body">
+            <span class="tag">SUV • Auto</span>
+            <div class="card-title">Hyundai Creta</div>
+            <div class="card-meta">5 Seats • Petrol • Sunroof</div>
+            <div class="card-price">
+              <span class="price">₹3,000/day</span>
+              <button class="btn btn-blue" onclick="pickCar('creta')">Book</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Thar -->
+        <div class="card" data-cat="suv">
+          <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400" alt="Thar">
+          <div class="card-body">
+            <span class="tag">SUV • 4x4</span>
+            <div class="card-title">Mahindra Thar</div>
+            <div class="card-meta">4 Seats • Diesel • 4WD</div>
+            <div class="card-price">
+              <span class="price">₹4,000/day</span>
+              <button class="btn btn-blue" onclick="pickCar('thar')">Book</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Bullet -->
+        <div class="card" data-cat="bike">
+          <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=400" alt="Royal Enfield">
+          <div class="card-body">
+            <span class="tag">Bike • Manual</span>
+            <div class="card-title">RE Classic 350</div>
+            <div class="card-meta">2 Seats • Petrol • 350 cc</div>
+            <div class="card-price">
+              <span class="price">₹800/day</span>
+              <button class="btn btn-blue" onclick="pickCar('bullet')">Book</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Duke 390 -->
+        <div class="card" data-cat="bike">
+          <img src="https://images.unsplash.com/photo-1571188654248-7a89213915f7?w=400" alt="KTM Duke">
+          <div class="card-body">
+            <span class="tag">Bike • Sports</span>
+            <div class="card-title">KTM Duke 390</div>
+            <div class="card-meta">2 Seats • Petrol • 45 HP</div>
+            <div class="card-price">
+              <span class="price">₹1,500/day</span>
+              <button class="btn btn-blue" onclick="pickCar('duke')">Book</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Activa -->
+        <div class="card" data-cat="scooter">
+          <img src="https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?w=400" alt="Activa">
+          <div class="card-body">
+            <span class="tag">Scooter • Auto</span>
+            <div class="card-title">Honda Activa 6G</div>
+            <div class="card-meta">2 Seats • Petrol • 50 km/L</div>
+            <div class="card-price">
+              <span class="price">₹400/day</span>
+              <button class="btn btn-blue" onclick="pickCar('activa')">Book</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Booking & Calculator -->
+    <section id="booking">
+      <h2>Book a Ride</h2>
+      <div class="box">
+        <form onsubmit="handleBooking(event)">
+          <div class="form-group">
+            <label>Customer Name *</label>
+            <input type="text" id="custName" placeholder="e.g. Rahul Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required>
+          </div>
+
+          <div class="form-group">
+            <label>Select Vehicle *</label>
+            <select id="carSelect" onchange="calculate()">
+              <option value="swift" data-rate="1500">Maruti Swift (₹1,500/day)</option>
+              <option value="creta" data-rate="3000">Hyundai Creta (₹3,000/day)</option>
+              <option value="thar" data-rate="4000">Mahindra Thar 4x4 (₹4,000/day)</option>
+              <option value="bullet" data-rate="800">RE Classic 350 (₹800/day)</option>
+              <option value="duke" data-rate="1500">KTM Duke 390 (₹1,500/day)</option>
+              <option value="activa" data-rate="400">Honda Activa 6G (₹400/day)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Rental Duration (in Days) *</label>
+            <input type="number" id="numDays" value="1" min="1" max="30" onchange="calculate()" onkeyup="calculate()" required>
+          </div>
+
+          <div class="form-group" style="display: flex; gap: 8px; align-items: center;">
+            <input type="checkbox" id="addDriver" onchange="calculate()" style="width: auto;">
+            <label for="addDriver" style="margin: 0; cursor: pointer;">Need a Driver? (+₹1,000 / day)</label>
+          </div>
+
+          <!-- Price Calculation Box -->
+          <div class="bill">
+            <div class="bill-row"><span>Base Rent:</span><span id="txtBase">₹1,500</span></div>
+            <div class="bill-row"><span>Driver Fee:</span><span id="txtDriver">₹0</span></div>
+            <div class="bill-row"><span>GST (18%):</span><span id="txtGst">₹270</span></div>
+            <div class="bill-row bill-total"><span>Total Payable:</span><span id="txtTotal">₹1,770</span></div>
+          </div>
+
+          <button type="submit" class="btn btn-green" style="width: 100%;">Confirm Booking</button>
+        </form>
+
+        <!-- Printable Receipt Box -->
+        <div id="receiptBox" class="receipt">
+          <h3 style="color: #28a745; margin-bottom: 6px;">Booking Confirmed ✓</h3>
+          <p><strong>Booking ID:</strong> <span id="rId"></span></p>
+          <p><strong>Name:</strong> <span id="rName"></span> (<span id="rPhone"></span>)</p>
+          <p><strong>Vehicle:</strong> <span id="rCar"></span></p>
+          <p><strong>Total Paid:</strong> <span id="rTotal" style="font-weight: bold; color: #0066cc;"></span></p>
+          <button class="btn btn-blue" onclick="window.print()" style="margin-top: 10px; width: 100%;">Print Receipt</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Admin / Host Management -->
+    <section id="admin">
+      <h2>Admin / Host Management</h2>
+      
+      <!-- Add Vehicle Form -->
+      <div class="box" style="margin-bottom: 20px;">
+        <h3 style="margin-bottom: 10px; font-size: 16px;">Add New Vehicle</h3>
+        <form onsubmit="addCar(event)" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <input type="text" id="nName" placeholder="Car Name" required style="flex: 2; padding: 6px;">
+          <select id="nType" style="flex: 1; padding: 6px;">
+            <option>Car</option><option>SUV</option><option>Bike</option><option>Scooter</option>
+          </select>
+          <input type="number" id="nPrice" placeholder="Daily Rent" required style="flex: 1; padding: 6px;">
+          <button type="submit" class="btn btn-blue">+ Add</button>
+        </form>
+      </div>
+
+      <!-- Vehicle Table -->
+      <table>
+        <thead>
+          <tr><th>Vehicle</th><th>Type</th><th>Daily Rent</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="carTable">
+          <tr><td>Maruti Swift</td><td>Car</td><td>₹1,500</td><td><span style="color: green; font-weight: bold;">Active</span></td><td><button class="btn btn-red" onclick="this.closest('tr').remove()">Delete</button></td></tr>
+          <tr><td>Hyundai Creta</td><td>SUV</td><td>₹3,000</td><td><span style="color: green; font-weight: bold;">Active</span></td><td><button class="btn btn-red" onclick="this.closest('tr').remove()">Delete</button></td></tr>
+          <tr><td>Mahindra Thar</td><td>SUV</td><td>₹4,000</td><td><span style="color: green; font-weight: bold;">Active</span></td><td><button class="btn btn-red" onclick="this.closest('tr').remove()">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. Student Info Footer -->
+    <footer>
+      <p><strong>Project:</strong> Vehicle Rental System | <strong>Technology:</strong> HTML, CSS, JavaScript</p>
+      <p>Submitted for Academic Mini Project Evaluation (2025 - 2026)</p>
+    </footer>
+
+  </div>
+
+  <!-- 7. Minimal JavaScript -->
+  <script>
+    // Category filter
+    function filterCars(cat, btn) {
+      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.card').forEach(c => {
+        c.style.display = (cat === 'all' || c.getAttribute('data-cat') === cat) ? 'flex' : 'none';
+      });
+    }
+
+    // Pick a car from card
+    function pickCar(carKey) {
+      document.getElementById('carSelect').value = carKey;
+      calculate();
+      document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Calculate total bill
+    function calculate() {
+      const select = document.getElementById('carSelect');
+      const rate = parseInt(select.options[select.selectedIndex].getAttribute('data-rate'), 10);
+      const days = parseInt(document.getElementById('numDays').value || '1', 10);
+      const hasDriver = document.getElementById('addDriver').checked;
+
+      const base = rate * days;
+      const driver = hasDriver ? 1000 * days : 0;
+      const gst = Math.round((base + driver) * 0.18);
+      const total = base + driver + gst;
+
+      document.getElementById('txtBase').textContent = '₹' + base.toLocaleString('en-IN');
+      document.getElementById('txtDriver').textContent = '₹' + driver.toLocaleString('en-IN');
+      document.getElementById('txtGst').textContent = '₹' + gst.toLocaleString('en-IN');
+      document.getElementById('txtTotal').textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    // Booking confirmation
+    function handleBooking(e) {
+      e.preventDefault();
+      const carSelect = document.getElementById('carSelect');
+      document.getElementById('rId').textContent = 'BK-' + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('rName').textContent = document.getElementById('custName').value;
+      document.getElementById('rPhone').textContent = document.getElementById('custPhone').value;
+      document.getElementById('rCar').textContent = carSelect.options[carSelect.selectedIndex].text;
+      document.getElementById('rTotal').textContent = document.getElementById('txtTotal').textContent;
+
+      document.getElementById('receiptBox').style.display = 'block';
+      alert('Booking Confirmed! Receipt displayed below.');
+    }
+
+    // Add vehicle to table
+    function addCar(e) {
+      e.preventDefault();
+      const name = document.getElementById('nName').value;
+      const type = document.getElementById('nType').value;
+      const price = document.getElementById('nPrice').value;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${name}</td><td>${type}</td><td>₹${price}</td><td><span style="color:green;font-weight:bold;">Active</span></td><td><button class="btn btn-red" onclick="this.closest('tr').remove()">Delete</button></td>`;
+      document.getElementById('carTable').appendChild(row);
+      e.target.reset();
+      alert(name + ' added to table!');
+    }
+
+    // Initial calculation on load
+    calculate();
+  </script>
+</body>
+</html>
