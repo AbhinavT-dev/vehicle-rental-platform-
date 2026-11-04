@@ -31,7 +31,7 @@ Designed as a clean, beginner-friendly academic class project with zero dependen
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
+   git clone https://github.com/AbhinavT-dev/vehicle-rental-platform-.git
    ```
 2. Navigate to the folder:
    ```bash
@@ -48,16 +48,18 @@ Designed as a clean, beginner-friendly academic class project with zero dependen
 ## 🌐 Deploy to GitHub Pages (Free Live Website)
 
 Since this project is pure static HTML/CSS/JS, you can host it live on GitHub Pages for free:
-1. Go to your GitHub repository **Settings**.
+1. Go to your GitHub repository **Settings**: [https://github.com/AbhinavT-dev/vehicle-rental-platform-/settings](https://github.com/AbhinavT-dev/vehicle-rental-platform-/settings)
 2. Click on **Pages** in the left sidebar.
 3. Under **Branch**, select `main` and root `/`, then click **Save**.
-4. Within 1 minute, your site will be live at: `https://<your-username>.github.io/<repo-name>/`!
+4. Within 1 minute, your site will be live at:
+   👉 **`https://abhinavt-dev.github.io/vehicle-rental-platform-/`**!
 
 ---
 
 ## 🎓 Academic Submission Details
 
 - **Project Title:** Online Vehicle Rental System
+- **Developer:** Abhinav
 - **Technologies:** HTML5, CSS3, JavaScript
 - **Submission Type:** Academic Web Development Mini Project
 - **Academic Year:** 2025 - 2026
